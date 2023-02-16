@@ -36,7 +36,9 @@ class CLIPDataset(Dataset):
         token = self.tokens[idx]
         return {'input_ids': token.ids,
                 'attention_mask': token.attention_mask,
-                'pixel_values': self.augment(Image.open(self.image_paths[idx]).convert('RGB'))}
+                'pixel_values': self.augment(
+                    Image.open(self.image_paths[idx]).convert('RGB')
+                )}
 
     def __len__(self):
         return len(self.image_paths)
