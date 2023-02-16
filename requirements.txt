@@ -1,1 +1,4 @@
 transformers
+torch
+torchvision
+Pillow
