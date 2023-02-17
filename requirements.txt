@@ -1,4 +1,6 @@
-transformers
+transformers~=4.6.1
 torch
 torchvision
-Pillow
+Pillow~=8.1.2
+scikit-learn~=0.23.2
+pandas~=1.2.3
