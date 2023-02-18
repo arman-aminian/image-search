@@ -1,6 +1,6 @@
 import pandas as pd
 import torch
-from transformers import TrainingArguments, AutoTokenizer, CLIPFeatureExtractor, \
+from transformers import TrainingArguments, AutoTokenizer, CLIPFeatureExtractor
 from sklearn.model_selection import train_test_split
 from src.train.dataset import CLIPDataset
 from src.train.model import get_clip_model
