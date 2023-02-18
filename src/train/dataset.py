@@ -16,9 +16,7 @@ class CLIPDataset(Dataset):
                  image_std,
                  mode: str = 'train'):
 
-        # image_paths = [os.path.join(images_folder_path, p) for p in image_paths]
         self.image_paths = image_paths
-        # text = ['photo' if str(v) == 'nan' else v for v in text]
         self.tokens = tokenizer(text, padding='max_length',
                                 max_length=max_len,
                                 truncation=True)

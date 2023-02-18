@@ -78,4 +78,6 @@ def train_clip(dataset_path,
 if __name__ == '__main__':
     with open("src/train/params.yaml", "r") as stream:
         params = yaml.safe_load(stream)
-        print(params)
+
+    train_params = params['train']
+    train_clip(**train_params)
