@@ -16,6 +16,7 @@ def train_clip(dataset_path,
                batch_size,
                image_size,
                max_len,
+               images_folder_path,
                clip_config):
     mean = torch.tensor([0.485, 0.456, 0.406])
     std = torch.tensor([0.229, 0.224, 0.225])
@@ -47,6 +48,7 @@ def train_clip(dataset_path,
                            tokenizer=text_tokenizer,
                            max_len=max_len,
                            image_size=image_size,
+                           images_folder_path=images_folder_path,
                            image_mean=mean,
                            image_std=std,
                            mode='train')
@@ -55,6 +57,7 @@ def train_clip(dataset_path,
                           tokenizer=text_tokenizer,
                           max_len=max_len,
                           image_size=image_size,
+                          images_folder_path=images_folder_path,
                           image_mean=mean,
                           image_std=std,
                           mode='test')

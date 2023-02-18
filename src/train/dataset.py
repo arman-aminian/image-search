@@ -1,6 +1,7 @@
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset
 from PIL import Image
+import os
 
 
 class CLIPDataset(Dataset):
@@ -10,9 +11,12 @@ class CLIPDataset(Dataset):
                  tokenizer,
                  max_len,
                  image_size,
+                 images_folder_path,
                  image_mean,
                  image_std,
                  mode: str = 'train'):
+
+        image_paths = [os.path.join(images_folder_path, p) for p in image_paths]
         self.image_paths = image_paths
         text = ['photo' if str(v) == 'nan' else v for v in text]
         self.tokens = tokenizer(text, padding='max_length',
