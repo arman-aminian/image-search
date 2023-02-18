@@ -1,4 +1,5 @@
 import pandas as pd
+import yaml
 import torch
 from transformers import TrainingArguments, AutoTokenizer, CLIPFeatureExtractor
 from sklearn.model_selection import train_test_split
@@ -66,3 +67,9 @@ def train_clip(dataset_path,
                           eval_dataset=test_ds)
 
     trainer.train()
+
+
+if __name__ == '__main__':
+    with open("src/train/params.yaml", "r") as stream:
+        params = yaml.safe_load(stream)
+        print(params)
