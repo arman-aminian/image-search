@@ -2,6 +2,7 @@ import pandas as pd
 import yaml
 import torch
 from transformers import TrainingArguments, AutoTokenizer, CLIPFeatureExtractor
+from transformers import CLIPVisionModel, AutoModel
 from sklearn.model_selection import train_test_split
 from src.train.dataset import CLIPDataset
 from src.train.model import get_clip_model
@@ -21,7 +22,6 @@ def train_clip(dataset_path,
     mean = torch.tensor([0.485, 0.456, 0.406])
     std = torch.tensor([0.229, 0.224, 0.225])
 
-    image_preprocessor = CLIPFeatureExtractor.from_pretrained(image_model)
     text_tokenizer = AutoTokenizer.from_pretrained(text_model)
     args = TrainingArguments(
         "clip-fa",
@@ -62,7 +62,10 @@ def train_clip(dataset_path,
                           image_std=std,
                           mode='test')
 
-    clip = get_clip_model(image_preprocessor, text_tokenizer, config=clip_config)
+    clip = get_clip_model(
+        image_embedding_model=CLIPVisionModel.from_pretrained(image_model),
+        text_embedding_model=AutoModel.from_pretrained(text_model),
+        config=clip_config)
 
     args.dataloader_num_workers = get_num_processors()
     trainer = CLIPTrainer(clip, args,
