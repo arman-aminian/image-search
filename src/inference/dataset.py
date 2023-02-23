@@ -16,3 +16,19 @@ class TextDataset(Dataset):
     def __len__(self):
         return self.len
 
+
+class VisionDataset(Dataset):
+
+    def __init__(self, image_paths: list, image_size, mean, std):
+        self.image_paths = image_paths
+        self.preprocess = transforms.Compose([
+            transforms.Resize((image_size, image_size)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=mean, std=std)
+        ])
+
+    def __getitem__(self, idx):
+        return self.preprocess(Image.open(self.image_paths[idx]).convert('RGB'))
+
+    def __len__(self):
+        return len(self.image_paths)
