@@ -24,7 +24,7 @@ def train_clip(dataset_path,
 
     text_tokenizer = AutoTokenizer.from_pretrained(text_model)
     args = TrainingArguments(
-        "clip-fa",
+        "image-fa-search",
         evaluation_strategy="steps",
         save_strategy="steps",
         eval_steps=100,
@@ -73,6 +73,10 @@ def train_clip(dataset_path,
                           eval_dataset=test_ds)
 
     trainer.train()
+
+    clip.text_model.save_pretrained('image-fa-search-text')
+    text_tokenizer.save_pretrained('image-fa-search-text')
+    clip.vision_model.save_pretrained('image-fa-search-vision')
 
 
 if __name__ == '__main__':
