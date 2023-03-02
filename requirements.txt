@@ -5,3 +5,9 @@ Pillow~=8.1.2
 scikit-learn~=0.23.2
 pandas~=1.2.3
 PyYAML~=5.4.1
+kaggle
+googletrans==3.1.0a0
+sentence-transformers
+numpy
+seaborn
+tqdm
