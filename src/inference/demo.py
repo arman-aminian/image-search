@@ -23,8 +23,11 @@ class ImageSearchDemo:
 
     def compute_image_embeddings(self, image_paths: list):
         self.image_paths = image_paths
+        mean = torch.tensor([0.485, 0.456, 0.406])
+        std = torch.tensor([0.229, 0.224, 0.225])
+        image_size=224
         dataloader = DataLoader(VisionDataset(
-            image_paths=image_paths), batch_size=self.batch_size)
+            image_paths=image_paths, image_size=image_size, mean=mean, std=std), batch_size=self.batch_size)
         embeddings = []
         with torch.no_grad():
             for images in tqdm(dataloader, desc='computing image embeddings'):
