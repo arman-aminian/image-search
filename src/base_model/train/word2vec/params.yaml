@@ -1,0 +1,6 @@
+train:
+  dataset_path: ../data/dataset.csv
+  train_size: 0.85
+  epochs: 100
+  result_path: ../result/
+
