@@ -10,7 +10,7 @@ import torch
 
 def train_base_model(params):
     corrnet = Corrnet(512, 50)
-    optimizer = optim.Adam(corrnet.parameters(), lr=0.001)
+    optimizer = optim.Adam(corrnet.parameters(), lr=0.005)
     model_save_path = params['model_save_path']
     criterion = nn.MSELoss()
     epochs = params['epochs']

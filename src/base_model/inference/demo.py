@@ -15,10 +15,9 @@ class ImageSearchDemo:
     def __init__(self):
         self.img2vec = Img2Vec('resnet-18', 'default', 512, cuda=True)
         self.w2v_weights = np.load("../train/result/w2v_embedding.npz")['arr_0']
-        # TODO change path of next line
         self.w2v_vocabs = pickle.load(open("../train/result/vocabs.pkl", "rb"))
         self.preprocessor = Preprocessor()
-        self.model_save_path = '../result/model_state.pt'
+        self.model_save_path = '../train/result/model_state.pt'
         self.corrnet = Corrnet(512, 50)
         self.corrnet.load_state_dict(torch.load(self.model_save_path))
         self.corrnet.eval()

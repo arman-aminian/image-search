@@ -59,9 +59,12 @@ def make_feature_set(train_param):
     # dataset = read_dataset(filepath)
     # dataset.to_pickle(filepath + '/dataset_images')
 
-    # TODO (call function that makes text_datas.csv)
-    with open(filepath + '/train_datas', "rb") as fh:
+    # TODO (call function that makes train_data and text_data)
+    with open(filepath + '/train_data', "rb") as fh:
         text_embeddings = pickle.load(fh)
+
+    with open(filepath + '/test_data', "rb") as fh:
+        test_text_embeddings = pickle.load(fh)
 
     image_embeddings = pd.read_pickle(filepath + '/dataset_images')
     image_embeddings = image_embeddings.rename({'images_name': 'image'}, axis=1)
@@ -70,21 +73,27 @@ def make_feature_set(train_param):
     dataset = dataset.rename({'vec': 'text_vec'}, axis=1)
     dataset = dataset[['img_vec', 'text_vec']]
     dataset.to_pickle(filepath + '/dataset_img_text_train')
+    print(dataset.head())
+    dataset = pd.merge(image_embeddings, test_text_embeddings, how="inner", on='image')
+    dataset = dataset.rename({'vec': 'text_vec'}, axis=1)
+    dataset = dataset[['img_vec', 'text_vec']]
+    dataset.to_pickle(filepath + '/dataset_img_text_test')
+    print(dataset.head())
 
 
 def make_dataset(train_param):
     # make_feature_set(train_param)
-    dataset = pd.read_pickle(train_param['dataset_path'] + '/dataset_img_text_train')
-    train_image_vectors = np.array(list(dataset['img_vec']))
-    train_text_vectors = np.array(list(dataset['text_vec']))
+    dataset_train = pd.read_pickle(train_param['dataset_path'] + '/dataset_img_text_train')
+    train_image_vectors = np.array(list(dataset_train['img_vec']))
+    train_text_vectors = np.array(list(dataset_train['text_vec']))
 
-    # dataset = pd.read_pickle(train_param['dataset_path'] + '/dataset_img_text_test')
-    # test_image_vectors = np.array(list(dataset['img_vec']))
-    # test_text_vectors = np.array(list(dataset['text_vec']))
+    dataset_test = pd.read_pickle(train_param['dataset_path'] + '/dataset_img_text_test')
+    test_image_vectors = np.array(list(dataset_test['img_vec']))
+    test_text_vectors = np.array(list(dataset_test['text_vec']))
 
     val_size = int((train_param['val_size'] / train_param['train_size']) * len(train_image_vectors))
     train_size = len(train_image_vectors) - val_size
-    # test_size = len(test_text_vectors)
+    test_size = len(test_text_vectors)
 
     img_train = torch.from_numpy(train_image_vectors[:train_size].astype(np.float32))
     txt_train = torch.from_numpy(train_text_vectors[:train_size].astype(np.float32))
@@ -94,10 +103,8 @@ def make_dataset(train_param):
     txt_val = torch.from_numpy(train_text_vectors[train_size:(train_size + val_size)].astype(np.float32))
     val_dataset = DataLoader(CorrnetDataset(img_val, txt_val), batch_size=train_param['batch_size'], shuffle=True)
 
-    # img_test = torch.from_numpy(image_vectors[(train_size + val_size):].astype(np.float32))
-    # txt_test = torch.from_numpy(text_vectors[(train_size + val_size):].astype(np.float32))
-    # test_dataset = DataLoader(CorrnetDataset(img_test, txt_test), batch_size=train_param['batch_size'], shuffle=True)
-    img_test = None
-    txt_test = None
+    img_test = torch.from_numpy(test_image_vectors.astype(np.float32))
+    txt_test = torch.from_numpy(test_text_vectors.astype(np.float32))
+    test_dataset = DataLoader(CorrnetDataset(img_test, txt_test), batch_size=train_param['batch_size'], shuffle=True)
 
     return train_dataset, val_dataset, img_test, txt_test
