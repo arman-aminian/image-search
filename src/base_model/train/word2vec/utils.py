@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pickle
 
 import tensorflow as tf
 from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
@@ -58,17 +59,13 @@ def generate_training_data(sequences, window_size, num_ns, vocab_size, seed):
 
     return targets, contexts, labels
 
-def text_standardization(input_data, preprocessor = Preprocessor()):
-        cleaned_input = preprocessor.cleaning(input_data)
-        return tf.convert_to_tensor(cleaned_input, dtype=tf.string) 
+def text_standardization(input_data, preprocessor):
+    cleaned_input = preprocessor.cleaning(input_data)
+    return tf.convert_to_tensor(cleaned_input, dtype=tf.string) 
 
-def text_preprocessing(input_dataframe):
-    def text_standardization(input_data):
-        cleaned_input = preprocessor.cleaning(input_data)
-        return tf.convert_to_tensor(cleaned_input, dtype=tf.string) 
-  
+def text_preprocessing(input_dataframe,col_name):
     preprocessor = Preprocessor()
-    return input_dataframe['caption'].apply(text_standardization)
+    return input_dataframe[col_name].apply(text_standardization, args=[preprocessor])
 
 
 def vectorize_vocabs(
@@ -92,3 +89,44 @@ def vectorize_vocabs(
     text_vector_ds = text_dataset.batch(1024).prefetch(AUTOTUNE).map(vectorize_layer).unbatch()
     sequences = list(text_vector_ds.as_numpy_iterator())
     return inverse_vocab, sequences
+
+
+def compute_text_embedding(query: str, w2v_weights, w2v_vocabs, embedding_dim=512):
+
+    query_embedding = None
+
+    v = [0. for i in range(embedding_dim)]
+    l = 0
+    for word in (query.numpy()).decode('utf-8').split():
+        word = '[UNK]' if word not in w2v_vocabs.keys() else word
+        v += w2v_weights[w2v_vocabs[word]]
+        l += 1
+    query_embedding = v / l
+
+    return query_embedding
+
+    
+def compute_texts_embedding(dataframe, params):
+    col_name = params['texts_col_name']
+    w2v_weights = np.load(open(params['result_path'] + 'w2v_embedding.npz','rb'))['arr_0']
+    w2v_vocabs = pickle.load(open(params['result_path'] + 'vocabs.pkl','rb'))
+
+    df['vec'] = df[col_name].apply(compute_text_embedding, args=[
+                                                            w2v_weights,
+                                                            w2v_vocabs
+                                                            ])
+    return df
+
+
+def read_dataset(dataset_path):
+    df = pd.read_csv(dataset_path)
+    return df
+    
+def split_dataset(dataframe, params):
+    train, test = train_test_split(dataframe, test_size=1 - params['train_size'] , random_state=41)
+    return train.reset_index(), test.reset_index()
+
+def save_df(dataframe, save_as: str, params):
+    dataframe.to_pickle(params['dataset_path']+save_as)
+
+

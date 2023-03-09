@@ -18,7 +18,7 @@ from tensorflow.keras.layers.experimental.preprocessing import TextVectorization
 from sklearn.model_selection import train_test_split
 
 
-def train_doc2vec(
+def train_word2vec(
     dataframe,
     params,
     embedding_dim = 512,
@@ -31,10 +31,8 @@ def train_doc2vec(
     num_ns = 4
     ):
 
-    df_stand = text_preprocessing(dataframe)
-    
-    #df_stand =  pd.DataFrame(list(df_stand))
-        
+    col_name = train_params['texts_col_name']
+    df_stand = dataframe[col_name]
 
     # Vectorisation and Inverse Vocabulary
     inverse_vocab, sequences = vectorize_vocabs(
@@ -63,16 +61,15 @@ def train_doc2vec(
                 loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
                 metrics=['accuracy'])
 
-    # tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="logs")
-    word2vec.fit(dataset, epochs=params['epochs'])  #, callbacks=[tensorboard_callback]
+    word2vec.fit(dataset, epochs=params['epochs']) 
 
 
-    weights1 = word2vec.get_layer('w2v_embedding').get_weights()[0]
-    weights2 = word2vec.get_layer('ctxt_embedding').get_weights()[0]
+    w2v_embedding = word2vec.get_layer('w2v_embedding').get_weights()[0]
+    ctxt_embedding = word2vec.get_layer('ctxt_embedding').get_weights()[0]
 
     # Save weights
-    np.savez(params['result_path']+'w2v_embedding.npz', weights1)
-    np.savez(params['result_path']+'ctxt_embedding.npz', weights2)
+    np.savez(params['result_path']+'w2v_embedding.npz', w2v_embedding)
+    np.savez(params['result_path']+'ctxt_embedding.npz', ctxt_embedding)
 
     
     vocab = {}
@@ -84,26 +81,34 @@ def train_doc2vec(
         pickle.dump(vocab, fp)
 
 
-    # Text embedding
-    lst = []
+
+
+def compute_text_embedding(query: str, params, w2v_weights, w2v_vocabs, embedding_dim=512):
+
+    query_embedding = None
+
+    v = [0. for i in range(embedding_dim)]
+    l = 0
+    for word in (query.numpy()).decode('utf-8').split():
+        word = '[UNK]' if word not in w2v_vocabs.keys() else word
+        v += w2v_weights[w2v_vocabs[word]]
+        l += 1
+    query_embedding = v / l
+
+    return query_embedding
+
     
-    for i in range(df_stand.size):
-        v = np.array([0. for i in range(embedding_dim)])
-        l = 0
-        for word in (df_stand[i].numpy()).decode('utf-8').split():
-            word = '[UNK]' if word not in vocab.keys() else word
-            v += weights1[vocab[word]]
-            l += 1
-        lst.append(v / l)
+def compute_texts_embedding(dataframe, params):
+    col_name = params['texts_col_name']
+    w2v_weights = np.load(open(params['result_path'] + 'w2v_embedding.npz','rb'))['arr_0']
+    w2v_vocabs = pickle.load(open(params['result_path'] + 'vocabs.pkl','rb'))
 
-    lst = [str(l) for l in lst]
-
-    # Writing texts embedds to CSV
-    with open(params['result_path']+"text_datas.csv", "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(lst)
-
-    return lst
+    df['vec'] = df[col_name].apply(compute_text_embedding, args=[
+                                                            params,
+                                                            w2v_weights,
+                                                            w2v_vocabs
+                                                            ])
+    return df
 
 
 def read_dataset(dataset_path):
@@ -111,22 +116,30 @@ def read_dataset(dataset_path):
     return df
     
 def split_dataset(dataframe, params):
-    train, test = train_test_split(dataframe, test_size=1 - params['train_size'] , random_state=42)
+    train, test = train_test_split(dataframe, test_size=1 - params['train_size'] , random_state=41)
     return train.reset_index(), test.reset_index()
 
-def join_df(train_df, embedded_docs, params):
-    # joining embedding of texts to corresponded text
-    final_df = train_df[['image']]
-    final_df['vec'] = embedded_docs
-    final_df.to_csv(params['result_path']+'train_datas.csv')
+def save_df(dataframe, save_as: str, params):
+    dataframe.to_pickle(params['dataset_path']+save_as)
+
 
 
 if __name__ == '__main__':
     with open("params.yaml", "r") as stream:
         params = yaml.safe_load(stream)
     train_params = params['train']
+    col_name = train_params['texts_col_name']
+
     df = read_dataset(train_params['dataset_path'])
-    train_df, _ = split_dataset(df, train_params)
-    embedded_docs = train_doc2vec(train_df, train_params)
-    join_df(train_df, embedded_docs, train_params)
+    df[col_name] = text_preprocessing(df, col_name)
+
+    train_df, test_df = split_dataset(df, train_params)
+    train_word2vec(train_df, train_params)
+
+    train_df = compute_texts_embedding(train_df, train_params)
+    test_df = compute_texts_embedding(test_df, train_params)
+
+    save_df(train_df, 'train_data', train_params)
+    save_df(test_df, 'test_data', train_params)
+
 

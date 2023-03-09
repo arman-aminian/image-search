@@ -9,6 +9,7 @@ import torch
 import glob
 import pandas as pd
 from src.base_model.train.img2vec import Img2Vec
+from src.base_model.train.word2vec.utils import save_df, split_dataset, read_dataset, compute_texts_embedding
 from PIL import Image
 
 
@@ -55,11 +56,21 @@ def read_dataset(file_path):
 def make_feature_set(train_param):
     filepath = train_param['dataset_path']
 
-    # dataset = pd.DataFrame()
-    # dataset = read_dataset(filepath)
-    # dataset.to_pickle(filepath + '/dataset_images')
+    col_name = 'caption'
+    train_param['texts_col_name'] = col_name
+    df = read_dataset(filepath+'/dataset.csv')
+    df[col_name] = text_preprocessing(df, col_name)
 
-    # TODO (call function that makes train_data and text_data)
+    train_df, test_df = split_dataset(df, train_param)
+
+    text_embeddings = compute_texts_embedding(train_df, train_param)
+    test_text_embeddings = compute_texts_embedding(test_df, train_param)
+
+    save_df(text_embeddings, '/train_data', train_param)
+    save_df(test_text_embeddings, '/test_data', train_param)
+    
+
+    # TODO (call function that makes train_data and test_data)
     with open(filepath + '/train_data', "rb") as fh:
         text_embeddings = pickle.load(fh)
 

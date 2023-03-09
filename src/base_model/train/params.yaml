@@ -7,3 +7,4 @@ train:
   epochs: 50
   best_val_loss: 1000
   model_save_path: ./result/model_state.pt
+  result_path: ./result/
