@@ -16,7 +16,7 @@
 
 With CLIP, we can train any two image and text encoder models together to relate images and text. It gives a score for relatedness of any given text and image! We fine-tuned [Vision Transformer(ViT)](https://huggingface.co/openai/clip-vit-base-patch32) as the vision encoder and the [roberta-zwnj-wnli-mean-tokens](https://huggingface.co/m3hrdadfi/roberta-zwnj-wnli-mean-tokens) as the farsi text encoder.
 
-You can find more details in notebooks for [CLIP training](https://colab.research.google.com/drive/1Rj9gFo4pTo1p-H2G3uw1viTJVJ8_-ZUF) and [baseline evaluation](https://colab.research.google.com/drive/1QZWgNFy9NZxj2g4pQH_UDFVVg2eGUOrn?usp=sharing)
+You can find more details in notebooks for [CLIP training](https://colab.research.google.com/drive/1Rj9gFo4pTo1p-H2G3uw1viTJVJ8_-ZUF)
 
 ## Translation
 
@@ -57,3 +57,21 @@ And hear are the results of our CLIP model on a sample of nocaps dataset with si
 
 You can find more details in notebooks for [CLIP evaluation](https://colab.research.google.com/drive/1Rj9gFo4pTo1p-H2G3uw1viTJVJ8_-ZUF) and [baseline evaluation](https://colab.research.google.com/drive/13NwD0bE0JaR5L6fj26EyoDVhB5G7lgfX)
 
+
+
+## Inference (How to use our model)
+
+```python
+from transformers import AutoModel, AutoTokenizer, CLIPVisionModel
+
+# load finetuned vision encoder
+vision_encoder = CLIPVisionModel.from_pretrained('arman-aminian/farsi-image-search-vision')
+# load our finetuned text encoder and tokenizer
+text_encoder = AutoModel.from_pretrained('arman-aminian/farsi-image-search-text')
+text_tokenizer = AutoTokenizer.from_pretrained('arman-aminian/farsi-image-search-text')
+
+search = ImageSearchDemo(vision_encoder, text_encoder, text_tokenizer, device='cuda')
+# encode images
+search.compute_image_embeddings(test.image.to_list())
+search.image_search('ورزش کردن گروهی')
+```
