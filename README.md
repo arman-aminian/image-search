@@ -23,7 +23,7 @@ You can find how to train the model in the [CLIP training notebook](https://cola
 
 To train (pretrain) this model, we need examples that are pairs of images and Persian text that are the text associated with the image.
 Since Persian data in this field is not easily available and manual labeling of data is costly, we decided to translate the available English data and obtain the other part of the data from the web crawling method.
-## Translation
+### Translation
 
 There weren't datasets with Persian captioned images, so we translated datasets with English captions to Persian with Google Translate using [googletrans](https://pypi.org/project/googletrans/) python package.
 
@@ -38,7 +38,7 @@ Finally, we filtered out top translations. Some samples of the final dataframe:
 
 More details of translation part can be found in [this notebook](https://colab.research.google.com/drive/1XcwbdegPsuXKybDczD4d8d8LLH1QlQ8m).
 
-## Crawler
+### Crawler
 For improve our model performance we crawled divar posts with it's [API](https://api.divar.ir). we saved image-title pairs in google drive.
 You can see more details in this [notebook](https://github.com/NLP-Final-Projects/image-search/blob/master/src/data/load/get_posts.ipynb).
 Some samples of final data is shown below:
