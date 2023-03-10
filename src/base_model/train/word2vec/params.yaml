@@ -1,0 +1,7 @@
+train:
+  dataset_path: ../../train/data/dataset.csv
+  texts_col_name: caption
+  train_size: 0.85
+  epochs: 100
+  result_path: ../result/
+
