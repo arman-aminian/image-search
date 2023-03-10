@@ -18,10 +18,10 @@ With CLIP, we can train any two image and text encoder models together to relate
 
 You can find how to train the model in the [CLIP training notebook](https://colab.research.google.com/drive/1Rj9gFo4pTo1p-H2G3uw1viTJVJ8_-ZUF).
 
-## data
+## Data
 
 
-To train (pretrain) this model, we need examples that are pairs of images and Persian text that are the text associated with the image.
+To train (fine-tune) this model, we need examples that are pairs of images and Persian text that are the text associated with the image.
 Since Persian data in this field is not easily available and manual labeling of data is costly, we decided to translate the available English data and obtain the other part of the data from the web crawling method.
 ### Translation
 
