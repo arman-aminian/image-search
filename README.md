@@ -33,7 +33,9 @@ Finally, we filtered out top translations. Some samples of the final dataframe:
 
 More details of translation part can be found in [this notebook](https://colab.research.google.com/drive/1XcwbdegPsuXKybDczD4d8d8LLH1QlQ8m).
 
-
+## Crawler
+For improve our model performance we crawled divar posts with it's [API](https://api.divar.ir). we saved image-title pairs in google drive.
+You can see more details in this [notebook](https://github.com/NLP-Final-Projects/image-search/blob/master/src/data/load/get_posts.ipynb).
 
 ## Evaluation
 
