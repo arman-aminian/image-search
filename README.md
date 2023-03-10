@@ -61,11 +61,36 @@ We can see the results of our CLIP model on a sample of flickr dataset with size
 
 <img alt="clip-flickr" src="./images/clip-flickr.png" width="35%"/> <img alt="clip-flickr-log" src="./images/clip-flickr-log.png" width="35%"/>
 
-And hear are the results of our CLIP model on a sample of nocaps dataset with size 1000 (the right diagram has a log scale in its x-axis:
+And here are the results of our CLIP model on a sample of nocaps dataset with size 1000 (the right diagram has a log scale in its x-axis:
 
 <img alt="clip-nocaps" src="./images/clip-nocaps.png" width="35%"/> <img alt="clip-nocaps-log" src="./images/clip-nocaps-log.png" width="35%"/>
 
 You can find more details in notebooks for [CLIP evaluation](https://colab.research.google.com/drive/1Rj9gFo4pTo1p-H2G3uw1viTJVJ8_-ZUF) and [baseline evaluation](https://colab.research.google.com/drive/13NwD0bE0JaR5L6fj26EyoDVhB5G7lgfX)
+
+
+### Zero-shot
+
+The model is zero-shot. So it should works on new tasks without new training.
+
+We used both models (CLIP & baseline), to classify images in two datasets:
+
+* [STL10](https://cs.stanford.edu/~acoates/stl10/): unseen data with 10 different categories.
+* [OxfordIIIT Pet](https://www.robots.ox.ac.uk/~vgg/data/pets/): unseen data with 37 different types of pets.
+
+We created a dataset from "OxfordIIIT Pet" which has only "dog" and "cat" labels.
+
+We can see the results of CLIP model classification on the two datasets:
+
+<img alt="zero-shot-clip-pet" src="./images/zero-shot-clip-pet.png" width="35%"/> <img alt="zero-shot-clip-stl10" src="./images/zero-shot-clip-stl10.png" width="35%"/>
+
+
+And here are the results of the baseline model in classification:
+
+<img alt="zero-shot-baseline-pet" src="./images/zero-shot-baseline-pet.png" width="35%"/> <img alt="zero-shot-baselinne-stl10" src="./images/zero-shot-baselinne-stl10.png" width="35%"/>
+
+
+You can find more details in notebooks for [CLIP zero-sho](https://colab.research.google.com/drive/135GM70VANRCCuT91INjolaHqITu8iqPN?usp=sharing) and [baseline zero-shot](https://colab.research.google.com/drive/1wrI1h4QTOxWdNHJdDRmdpqpsA0BIc_d5?usp=sharing)
+
 
 
 
