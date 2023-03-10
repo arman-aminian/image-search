@@ -54,21 +54,7 @@ def read_dataset(file_path):
 
 
 def make_feature_set(train_param):
-    filepath = train_param['dataset_path']
-
-    col_name = 'caption'
-    train_param['texts_col_name'] = col_name
-    df = read_dataset(filepath+'/dataset.csv')
-    df[col_name] = text_preprocessing(df, col_name)
-
-    train_df, test_df = split_dataset(df, train_param)
-
-    text_embeddings = compute_texts_embedding(train_df, train_param)
-    test_text_embeddings = compute_texts_embedding(test_df, train_param)
-
-    save_df(text_embeddings, '/train_data', train_param)
-    save_df(test_text_embeddings, '/test_data', train_param)
-    
+    filepath = train_param['dataset_path'] 
 
     # TODO (call function that makes train_data and test_data)
     with open(filepath + '/train_data', "rb") as fh:
