@@ -32,13 +32,11 @@ We calculated this metric for both models (CLIP & baseline) on two datasets:
 
 We can see the results of our CLIP model on a sample of flickr dataset with size 1000 (the right diagram has a log scale in its x-axis:
 
-<img alt="clip-flickr" src="./images/clip-flickr.png" width="45%"/>
-<img alt="clip-flickr-log" src="./images/clip-flickr-log.png" width="45%"/>
+<img alt="clip-flickr" src="./images/clip-flickr.png" width="35%"/> <img alt="clip-flickr-log" src="./images/clip-flickr-log.png" width="35%"/>
 
 And hear are the results of our CLIP model on a sample of nocaps dataset with size 1000 (the right diagram has a log scale in its x-axis:
 
-<img alt="clip-nocaps" src="./images/clip-nocaps.png" width="45%"/>
-<img alt="clip-nocaps-log" src="./images/clip-nocaps-log.png" width="45%"/>
+<img alt="clip-nocaps" src="./images/clip-nocaps.png" width="35%"/> <img alt="clip-nocaps-log" src="./images/clip-nocaps-log.png" width="35%"/>
 
 You can find more details in notebooks for [CLIP evaluation](https://colab.research.google.com/drive/1Rj9gFo4pTo1p-H2G3uw1viTJVJ8_-ZUF) and [baseline evaluation](https://colab.research.google.com/drive/13NwD0bE0JaR5L6fj26EyoDVhB5G7lgfX)
 
