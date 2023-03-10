@@ -1,3 +1,8 @@
+<span align="center">
+<a href="https://huggingface.co/spaces/arman-aminian/farsi-image-search"><img src="https://img.shields.io/static/v1?label=%F0%9F%A4%97%20Hugging%20Face&message=HF Demo&color=orange"></a>
+<a href="https://huggingface.co/arman-aminian"><img src="https://img.shields.io/static/v1?label=%F0%9F%A4%97%20Hugging%20Face&message=Models&color=blue"></a>
+</span>
+
 # image-search
 
 
