@@ -75,3 +75,13 @@ search = ImageSearchDemo(vision_encoder, text_encoder, text_tokenizer, device='c
 search.compute_image_embeddings(test.image.to_list())
 search.image_search('ورزش کردن گروهی')
 ```
+
+
+## [Web-based Demo](https://huggingface.co/spaces/arman-aminian/farsi-image-search)
+
+We have deployed our model on Huggingface site, which you can query through https://huggingface.co/spaces/arman-aminian/farsi-image-search right now! Please keep in mind that our model had time and hardware limitations to train the model. Also, the demo searches for your query from a limited dataset and shows you the ten best results, so there may not be ten photos completely related to your query in the demo dataset that the model wants to find :D
+
+In order for the result to be reliable, the dataset selected for the demo is completely new and taken from the [unsplash](https://unsplash.com/), and even other parts of this dataset have not been seen during the training of the model.
+
+<img alt="animal-walking-on-the-street" src="./images/animal-walking-on-the-street.png"/> 
+<img alt="flock-of-birds-in-flight" src="./images/flock-of-birds-in-flight.png"/>
