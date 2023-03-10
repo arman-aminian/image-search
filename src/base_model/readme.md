@@ -5,7 +5,7 @@ This Model has two branches for encoding text and image and also two branches fo
 
 You can find how to train the model in the [BaseModel training notebook](https://colab.research.google.com/drive/1x5A9BJmNm-DLPBjF_mEFF3K3mAHqqAjg?usp=sharing).
 
-![BaseModel](/images/BaseModel.png "BaseModel")
+<img alt="BaseModel" src="./images/BaseModel.png"/> 
 
 For image encoding in encoder branch we use resnet-18 and for text encoding, we use the embedded vectors of trained [word2vec model](https://www.tensorflow.org/tutorials/text/word2vec) on captions.
 

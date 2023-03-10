@@ -11,3 +11,7 @@ sentence-transformers
 numpy
 seaborn
 tqdm
+tensorflow==2.11.0
+hazm
+pickle
+emoji
