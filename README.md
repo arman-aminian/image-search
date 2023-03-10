@@ -36,6 +36,9 @@ More details of translation part can be found in [this notebook](https://colab.r
 ## Crawler
 For improve our model performance we crawled divar posts with it's [API](https://api.divar.ir). we saved image-title pairs in google drive.
 You can see more details in this [notebook](https://github.com/NLP-Final-Projects/image-search/blob/master/src/data/load/get_posts.ipynb).
+Some samples of final data is shown below:
+<img alt="divar.png" src="images/divar.png" width="700"/>
+
 
 ## Evaluation
 
