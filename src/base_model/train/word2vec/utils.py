@@ -60,10 +60,12 @@ def generate_training_data(sequences, window_size, num_ns, vocab_size, seed):
     return targets, contexts, labels
 
 def text_standardization(input_data, preprocessor):
+    '''Text preprocessing'''
     cleaned_input = preprocessor.cleaning(input_data)
     return tf.convert_to_tensor(cleaned_input, dtype=tf.string) 
 
 def text_preprocessing(input_dataframe,col_name):
+    '''Preprocess Texts of a Dataframe's column'''
     preprocessor = Preprocessor()
     return input_dataframe[col_name].apply(text_standardization, args=[preprocessor])
 
@@ -75,7 +77,6 @@ def vectorize_vocabs(
                     AUTOTUNE = tf.data.AUTOTUNE,
                     ):
     vectorize_layer = TextVectorization(
-        #standardize=custom_standardization,
         max_tokens=vocab_size,
         output_mode='int',
         output_sequence_length=sequence_length)
@@ -91,8 +92,8 @@ def vectorize_vocabs(
     return inverse_vocab, sequences
 
 
-def compute_text_embedding(query: str, w2v_weights, w2v_vocabs, embedding_dim=512):
-
+def compute_text_embedding(query: str, params, w2v_weights, w2v_vocabs, embedding_dim=512):
+    '''Computting an embedding for a text'''
     query_embedding = None
 
     v = [0. for i in range(embedding_dim)]
@@ -107,11 +108,13 @@ def compute_text_embedding(query: str, w2v_weights, w2v_vocabs, embedding_dim=51
 
     
 def compute_texts_embedding(dataframe, params):
+    '''Computting texts' embedding of a Dataframe'''
     col_name = params['texts_col_name']
     w2v_weights = np.load(open(params['result_path'] + 'w2v_embedding.npz','rb'))['arr_0']
     w2v_vocabs = pickle.load(open(params['result_path'] + 'vocabs.pkl','rb'))
 
     df['vec'] = df[col_name].apply(compute_text_embedding, args=[
+                                                            params,
                                                             w2v_weights,
                                                             w2v_vocabs
                                                             ])
@@ -119,14 +122,17 @@ def compute_texts_embedding(dataframe, params):
 
 
 def read_dataset(dataset_path):
+    '''Reading data from desired path as DataFrame'''
     df = pd.read_csv(dataset_path)
     return df
     
 def split_dataset(dataframe, params):
+    '''Splitting data to test and train '''
     train, test = train_test_split(dataframe, test_size=1 - params['train_size'] , random_state=41)
     return train.reset_index(), test.reset_index()
 
 def save_df(dataframe, save_as: str, params):
+    '''Saving dataframe as pickle file'''
     dataframe.to_pickle(params['dataset_path']+save_as)
 
 
